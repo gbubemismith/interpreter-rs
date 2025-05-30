@@ -8,7 +8,9 @@ fn start_execution_fails_for_unsupported_file_extension() {
     cmd.arg("some/path/to/file.txt");
     let output = cmd.output().expect("fail");
 
-    cmd.assert().success();
+    println!("Output:: {:?}", output);
+
+    cmd.assert().failure();
     let stderr = String::from_utf8(output.stderr).expect("Invalid UTF-8");
 
     assert_eq!(stderr, "Required '.lox' file, file not supported!\n");

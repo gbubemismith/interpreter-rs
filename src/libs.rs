@@ -7,13 +7,14 @@ use clap::Parser;
 
 use crate::error::Error;
 
-#[derive(Parser)]
-pub struct Args {
+#[derive(Debug, Parser)]
+#[command(name = "interpreter-rs", version = "0.1.0", author = "Gbubemi Smith")]
+pub struct Cli {
     /// The path to the file to read
     path: Option<std::path::PathBuf>,
 }
 
-impl Args {
+impl Cli {
     pub fn start_execution() -> Result<(), Error> {
         let args = Self::parse();
 
