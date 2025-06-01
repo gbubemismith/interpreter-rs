@@ -31,9 +31,9 @@ impl Cli {
 
         match file_ext {
             Some(ext) => {
-                if ext != "lox" {
+                if ext != "smith" {
                     return Err(Error::Runtime(
-                        "Required '.lox' file, file not supported!".to_string(),
+                        "Required '.smith' file, file not supported!".to_string(),
                     ));
                 }
             }

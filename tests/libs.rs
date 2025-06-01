@@ -11,13 +11,13 @@ fn start_execution_fails_for_unsupported_file_extension() {
     cmd.assert().failure();
     let stderr = String::from_utf8(output.stderr).expect("Invalid UTF-8");
 
-    assert_eq!(stderr, "Required '.lox' file, file not supported!\n");
+    assert_eq!(stderr, "Required '.smith' file, file not supported!\n");
 }
 
 #[test]
 fn start_execution_passes_for_supported_file_extension() {
     let mut cmd = Command::cargo_bin("interpreter-rs").unwrap();
-    cmd.arg("tests/inputs/test.lox");
+    cmd.arg("tests/inputs/test.smith");
     let output = cmd.output().expect("fail");
 
     cmd.assert().success();
