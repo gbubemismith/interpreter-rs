@@ -2,7 +2,7 @@
 
 A Rust implementation of the interpreter described in the book [Crafting Interpreters](https://craftinginterpreters.com/) by Bob Nystrom.
 
-This project aims to follow the book's structure and philosophy, building a Lox interpreter in Rust. It is a learning project, focusing on clarity, idiomatic Rust, and testability.
+This project aims to follow the book's structure and philosophy, building a Lox(using the `.smith` extension for source files) interpreter in Rust. It is a learning project, focusing on clarity, idiomatic Rust, and testability.
 
 ## Features
 
@@ -54,7 +54,7 @@ cargo test
 
 ## Contributing
 
-This project is primarily for educational purposes, but contributions and suggestions are welcome!  
+This project is primarily for educational purposes, but contributions and suggestions are welcome!
 If you see a better or more idiomatic way to implement something, suggestions are especially encouraged.
 
 ---
