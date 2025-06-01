@@ -265,6 +265,16 @@ fn map_keyword(keyword: &str) -> Option<TokenType> {
 mod tests {
     use super::*;
 
+    // Utility function for making tokens
+    fn make_token(ttype: TokenType, lexeme: &str, literal: LiteralTypes, line: usize) -> Token {
+        Token {
+            ttype,
+            lexeme: lexeme.to_string(),
+            literal,
+            line,
+        }
+    }
+
     /// Scanner initialization tests
     mod scanner_init {
         use super::*;
@@ -290,59 +300,50 @@ mod tests {
         use super::*;
 
         #[test]
+        fn tokenize_muliple_lines() {
+            let source = r#"var name = "Gbubemi";
+            var counter = 1;"#
+                .to_string();
+            let mut scanner = Scanner::new(source);
+
+            let expected_vec = vec![
+                make_token(TokenType::Var, "var", LiteralTypes::Nil, 1),
+                make_token(TokenType::Identifier, "name", LiteralTypes::Nil, 1),
+                make_token(TokenType::Equal, "=", LiteralTypes::Nil, 1),
+                make_token(
+                    TokenType::String,
+                    r#""Gbubemi""#,
+                    LiteralTypes::String(String::from("Gbubemi")),
+                    1,
+                ),
+                make_token(TokenType::SemiColon, ";", LiteralTypes::Nil, 1),
+                make_token(TokenType::Var, "var", LiteralTypes::Nil, 2),
+                make_token(TokenType::Identifier, "counter", LiteralTypes::Nil, 2),
+                make_token(TokenType::Equal, "=", LiteralTypes::Nil, 2),
+                make_token(TokenType::Number, "1", LiteralTypes::Number(1.0), 2),
+                make_token(TokenType::SemiColon, ";", LiteralTypes::Nil, 2),
+                make_token(TokenType::EOF, "", LiteralTypes::Nil, 2),
+            ];
+
+            let tokens = scanner.scan_tokens();
+
+            assert_eq!(expected_vec, tokens);
+        }
+
+        #[test]
         fn tokenize_single_chars() {
             let source = "var add = 1 + 1;".to_string();
             let mut scanner = Scanner::new(source);
 
             let expected_vec = vec![
-                Token {
-                    ttype: TokenType::Var,
-                    lexeme: String::from("var"),
-                    literal: LiteralTypes::Nil,
-                    line: 1,
-                },
-                Token {
-                    ttype: TokenType::Identifier,
-                    lexeme: String::from("add"),
-                    literal: LiteralTypes::Nil,
-                    line: 1,
-                },
-                Token {
-                    ttype: TokenType::Equal,
-                    lexeme: String::from("="),
-                    literal: LiteralTypes::Nil,
-                    line: 1,
-                },
-                Token {
-                    ttype: TokenType::Number,
-                    lexeme: String::from("1"),
-                    literal: LiteralTypes::Number(1.0),
-                    line: 1,
-                },
-                Token {
-                    ttype: TokenType::Plus,
-                    lexeme: String::from("+"),
-                    literal: LiteralTypes::Nil,
-                    line: 1,
-                },
-                Token {
-                    ttype: TokenType::Number,
-                    lexeme: String::from("1"),
-                    literal: LiteralTypes::Number(1.0),
-                    line: 1,
-                },
-                Token {
-                    ttype: TokenType::SemiColon,
-                    lexeme: String::from(";"),
-                    literal: LiteralTypes::Nil,
-                    line: 1,
-                },
-                Token {
-                    ttype: TokenType::EOF,
-                    lexeme: String::from(""),
-                    literal: LiteralTypes::Nil,
-                    line: 1,
-                },
+                make_token(TokenType::Var, "var", LiteralTypes::Nil, 1),
+                make_token(TokenType::Identifier, "add", LiteralTypes::Nil, 1),
+                make_token(TokenType::Equal, "=", LiteralTypes::Nil, 1),
+                make_token(TokenType::Number, "1", LiteralTypes::Number(1.0), 1),
+                make_token(TokenType::Plus, "+", LiteralTypes::Nil, 1),
+                make_token(TokenType::Number, "1", LiteralTypes::Number(1.0), 1),
+                make_token(TokenType::SemiColon, ";", LiteralTypes::Nil, 1),
+                make_token(TokenType::EOF, "", LiteralTypes::Nil, 1),
             ];
 
             let tokens = scanner.scan_tokens();
@@ -355,12 +356,7 @@ mod tests {
             let source = "/**  this is a sample block comment */".to_string();
             let mut scanner = Scanner::new(source);
 
-            let expected_vec = vec![Token {
-                ttype: TokenType::EOF,
-                lexeme: String::from(""),
-                literal: LiteralTypes::Nil,
-                line: 1,
-            }];
+            let expected_vec = vec![make_token(TokenType::EOF, "", LiteralTypes::Nil, 1)];
 
             let tokens = scanner.scan_tokens();
 
