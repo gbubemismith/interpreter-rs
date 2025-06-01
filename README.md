@@ -54,7 +54,8 @@ cargo test
 
 ## Contributing
 
-This project is primarily for educational purposes, but contributions and suggestions are welcome! Please open an issue or pull request.
+This project is primarily for educational purposes, but contributions and suggestions are welcome!  
+If you see a better or more idiomatic way to implement something, suggestions are especially encouraged.
 
 ---
 
