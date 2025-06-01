@@ -101,6 +101,7 @@ impl Scanner {
             ' ' | '\r' | '\t' => {}
             '\n' => self.line += 1,
             '"' => self.string(),
+
             _ => {
                 if self.is_digit(c) {
                     self.number();
@@ -124,6 +125,7 @@ impl Scanner {
     }
 
     fn advance(&mut self) -> char {
+        // warning: intended for only ASCII characters
         let c = self.source.as_bytes()[self.current] as char;
         self.current += 1;
         c
@@ -290,13 +292,79 @@ mod tests {
         #[test]
         fn tokenize_single_chars() {
             let source = "var add = 1 + 1;".to_string();
-            let mut scanner = Scanner::new(source.clone());
+            let mut scanner = Scanner::new(source);
 
-            let expected = scanner.scan_tokens();
+            let expected_vec = vec![
+                Token {
+                    ttype: TokenType::Var,
+                    lexeme: String::from("var"),
+                    literal: LiteralTypes::Nil,
+                    line: 1,
+                },
+                Token {
+                    ttype: TokenType::Identifier,
+                    lexeme: String::from("add"),
+                    literal: LiteralTypes::Nil,
+                    line: 1,
+                },
+                Token {
+                    ttype: TokenType::Equal,
+                    lexeme: String::from("="),
+                    literal: LiteralTypes::Nil,
+                    line: 1,
+                },
+                Token {
+                    ttype: TokenType::Number,
+                    lexeme: String::from("1"),
+                    literal: LiteralTypes::Number(1.0),
+                    line: 1,
+                },
+                Token {
+                    ttype: TokenType::Plus,
+                    lexeme: String::from("+"),
+                    literal: LiteralTypes::Nil,
+                    line: 1,
+                },
+                Token {
+                    ttype: TokenType::Number,
+                    lexeme: String::from("1"),
+                    literal: LiteralTypes::Number(1.0),
+                    line: 1,
+                },
+                Token {
+                    ttype: TokenType::SemiColon,
+                    lexeme: String::from(";"),
+                    literal: LiteralTypes::Nil,
+                    line: 1,
+                },
+                Token {
+                    ttype: TokenType::EOF,
+                    lexeme: String::from(""),
+                    literal: LiteralTypes::Nil,
+                    line: 1,
+                },
+            ];
 
-            println!("Checking:: {:#?}", expected);
+            let tokens = scanner.scan_tokens();
 
-            assert_eq!(scanner.tokens, expected);
+            assert_eq!(expected_vec, tokens);
+        }
+
+        #[test]
+        fn scanner_skips_c_styled_block_comments() {
+            let source = "/**  this is a sample block comment */".to_string();
+            let mut scanner = Scanner::new(source);
+
+            let expected_vec = vec![Token {
+                ttype: TokenType::EOF,
+                lexeme: String::from(""),
+                literal: LiteralTypes::Nil,
+                line: 1,
+            }];
+
+            let tokens = scanner.scan_tokens();
+
+            assert_eq!(expected_vec, tokens);
         }
     }
 }
