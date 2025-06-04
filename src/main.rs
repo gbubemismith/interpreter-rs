@@ -1,4 +1,5 @@
 mod error;
+mod expr;
 mod libs;
 mod scanner;
 mod token;
